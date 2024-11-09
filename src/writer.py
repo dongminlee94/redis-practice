@@ -99,20 +99,19 @@ if __name__ == "__main__":
 
     dataset_name = "iris"
 
-    if 0:
+    if 1:
         version = 1
 
         serving_data = load_date(dataset_name=dataset_name)
         save_data(redis_client=redis_client, dataset_name=dataset_name, version=version, df=serving_data)
         data = get_data(redis_client=redis_client, dataset_name=dataset_name, version=version)
-        if data:
-            print(f"Shape: ({len(data)}, {len(data[0])})")
+        print(f"Shape: ({len(data)}, {len(data[0])})")
 
         set_master_key(redis_client=redis_client, dataset_name=dataset_name, version=version)
         current_version = get_master_key(redis_client=redis_client, dataset_name=dataset_name)
         print(f"Current version: {current_version}")
 
-    if 1:
+    if 0:
         version = 2
 
         serving_data = load_date(dataset_name=dataset_name)
