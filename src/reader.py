@@ -37,7 +37,8 @@ def get_current_version(redis_client: redis.Redis, dataset_name: str) -> str:
 if __name__ == "__main__":
     redis_client = get_redis_client()
 
-    dataset_name = "iris"
+    dataset_name = "wine"
     version = get_current_version(redis_client=redis_client, dataset_name=dataset_name)
 
-    print(get_data(redis_client=redis_client, dataset_name=dataset_name, version=version))
+    data = get_data(redis_client=redis_client, dataset_name=dataset_name, version=version)
+    print(len(data))

@@ -3,7 +3,7 @@ from typing import Any
 
 import pandas as pd
 import redis
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_iris, load_wine
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
@@ -16,8 +16,12 @@ def get_redis_client() -> redis.Redis:
     )
 
 
-def load_date() -> pd.DataFrame:
-    X, y = load_iris(return_X_y=True, as_frame=True)
+def load_date(dataset_name: str) -> pd.DataFrame:
+    if dataset_name == "iris":
+        X, y = load_iris(return_X_y=True, as_frame=True)
+    elif dataset_name == "wine":
+        X, y = load_wine(return_X_y=True, as_frame=True)
+
     X_train, X_valid, y_train, _ = train_test_split(X, y, train_size=0.8)
 
     scaler = StandardScaler()
@@ -95,23 +99,23 @@ if __name__ == "__main__":
 
     dataset_name = "iris"
 
-    if 1:
-        version = "version_1"
+    if 0:
+        version = 1
 
-        # serving_data = load_date()
-        # save_data(redis_client=redis_client, dataset_name=dataset_name, version=version, df=serving_data)
+        serving_data = load_date(dataset_name=dataset_name)
+        save_data(redis_client=redis_client, dataset_name=dataset_name, version=version, df=serving_data)
         data = get_data(redis_client=redis_client, dataset_name=dataset_name, version=version)
         if data:
             print(f"Shape: ({len(data)}, {len(data[0])})")
 
-        # set_master_key(redis_client=redis_client, dataset_name=dataset_name, version=version)
+        set_master_key(redis_client=redis_client, dataset_name=dataset_name, version=version)
         current_version = get_master_key(redis_client=redis_client, dataset_name=dataset_name)
         print(f"Current version: {current_version}")
 
-    if 0:
-        version = "version_2"
+    if 1:
+        version = 2
 
-        serving_data = load_date()
+        serving_data = load_date(dataset_name=dataset_name)
         save_data(redis_client=redis_client, dataset_name=dataset_name, version=version, df=serving_data)
         data = get_data(redis_client=redis_client, dataset_name=dataset_name, version=version)
         print(f"Shape: ({len(data)}, {len(data[0])})")
